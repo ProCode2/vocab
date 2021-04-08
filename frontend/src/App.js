@@ -13,7 +13,7 @@ function App() {
           console.log(e.currentTarget.querySelector("input").value);
           fetch(`/search/${e.currentTarget.querySelector("input").value}`)
             .then((res) => res.json())
-            .then((data) => setWords(data.message));
+            .then((data) => console.log(data));
         }}
       >
         <input type="text" placeholder="Search" />

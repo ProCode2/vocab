@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const Word = require("./models/word");
 
 const PORT = process.env.PORT || 3001;
 
@@ -23,17 +24,57 @@ mongoose
 // serve the react app
 app.use(express.static(path.resolve(__dirname, "../frontend/build")));
 
-app.get("/search/:searchText", (req, res) => {
+app.get("/searchss/:searchText", (req, res) => {
   const { searchText } = req.params;
+});
+
+app.get("/add/:word", (req, res) => {
+  const { word } = req.params;
   axios({
     method: "GET",
-    url: `https://od-api.oxforddictionaries.com/api/v2/entries/en-us/${searchText.toLocaleLowerCase()}`,
+    url: `https://od-api.oxforddictionaries.com/api/v2/entries/en-us/${word.toLocaleLowerCase()}`,
     headers: {
       app_id: process.env.API_ID,
       app_key: process.env.API_KEY,
     },
-  }).then((d) => res.send(d.data));
-  // res.json({ message: "Hello" });
+  })
+    .then((d) => {
+      let wordName = d.data.results[0].word;
+      let pronunciations = d.data.results[0].lexicalEntries[0].entries[0].pronunciations.map(
+        (item) => item.phoneticSpelling
+      );
+
+      let wordInfo = d.data.results[0].lexicalEntries.map((entry) => {
+        let pos = entry.lexicalCategory.text;
+        let definitions = entry.entries[0].senses.map((item) => ({
+          definition: item.definitions[0],
+          examples: item.examples.map((t) => t.text),
+        }));
+        return {
+          pos: pos,
+          definitions: definitions,
+        };
+      });
+
+      let origin =
+        d.data.results[0].lexicalEntries[0].entries[0].etymologies[0];
+
+      const wordRecord = new Word({
+        word: wordName,
+        pronunciations: pronunciations,
+        origin: origin,
+        info: wordInfo,
+      });
+
+      wordRecord.save().then((result) => {
+        console.log(result);
+        res.json(result);
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json(err);
+    });
 });
 
 // redirect unhandled routes to react app

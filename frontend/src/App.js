@@ -11,7 +11,7 @@ function App() {
         onSubmit={(e) => {
           e.preventDefault();
           console.log(e.currentTarget.querySelector("input").value);
-          fetch(`/search/${e.currentTarget.querySelector("input").value}`)
+          fetch(`/add/${e.currentTarget.querySelector("input").value}`)
             .then((res) => res.json())
             .then((data) => console.log(data));
         }}

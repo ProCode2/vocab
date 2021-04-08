@@ -1,0 +1,33 @@
+.f {
+  background-color: #5e1149;
+  width: 100vw;
+  height: 100vh;
+}
+.s {
+  background-color: white;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 70px;
+  border-radius: 30px 30px;
+  box-shadow: 0 -1px 10px -2px black;
+  transition: all 400ms ease;
+}
+.t {
+  border-radius: 0;
+  top: 0;
+}
+
+.c {
+  padding: 10px 20px;
+  color: #666666;
+}
+
+.l {
+  padding: 28px 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #f8f6f7;
+  border: none;
+  outline: none;
+}

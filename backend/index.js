@@ -8,7 +8,9 @@ const app = express();
 // serve the react app
 app.use(express.static(path.resolve(__dirname, "../frontend/build")));
 
-app.get("/api", (req, res) => {
+app.get("/search/:searchText", (req, res) => {
+  const { searchText } = req.params;
+  console.log(searchText);
   res.json({ message: "Hello from server!" });
 });
 

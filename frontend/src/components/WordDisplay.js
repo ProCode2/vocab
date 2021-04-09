@@ -1,6 +1,11 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
-function WordDisplay({ word }) {
+function WordDisplay() {
+  const wordState = useSelector((state) => state.word);
+
+  const word = wordState.currentWord;
+
   return (
     <div className="p-8">
       <h1 className="font-bold text-4xl">{word.word}</h1>
@@ -15,23 +20,25 @@ function WordDisplay({ word }) {
         </p>
       </div>
       {word.info.map((wordInfo) => (
-        <>
+        <div key={wordInfo.pos}>
           <hr />
           <div className="py-3">
             <p className="text-gray-500 italic">{wordInfo.pos}</p>
             {wordInfo.definitions.map((df) => (
-              <div>
+              <div key={df.definition}>
                 <p className="font-bold mb-1 mt-2">{df.definition}</p>
                 <ul className="ml-8">
                   {df.examples.map((eg) => (
-                    <li className="list-disc">{eg}</li>
+                    <li key={eg} className="list-disc">
+                      {eg}
+                    </li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
           <hr />
-        </>
+        </div>
       ))}
     </div>
   );

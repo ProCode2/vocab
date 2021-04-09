@@ -24,8 +24,31 @@ mongoose
 // serve the react app
 app.use(express.static(path.resolve(__dirname, "../frontend/build")));
 
-app.get("/searchss/:searchText", (req, res) => {
+app.get("/getall", (req, res) => {
+  Word.find({})
+    .then((records) => {
+      console.log(records);
+      res.json(records);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json(err);
+    });
+});
+
+app.get("/search/:searchText", (req, res) => {
   const { searchText } = req.params;
+  Word.find({
+    word: { $regex: `.*${searchText.toLocaleLowerCase()}.*` },
+  })
+    .then((records) => {
+      console.log(records);
+      res.json(records);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json(err);
+    });
 });
 
 app.get("/add/:word", (req, res) => {

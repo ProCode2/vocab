@@ -2,6 +2,7 @@
 SET_SEARCH_TEXT
 SET_FULL_PAGE
 SET_SEARCHING
+SET_FLASH_MESSAGE
 */
 
 const setSearchText = (text) => {
@@ -17,6 +18,7 @@ const setFullPage = (condition) => {
     payload: condition,
   };
 };
+
 const setSearching = (condition) => {
   return {
     type: "SET_SEARCHING",
@@ -24,8 +26,16 @@ const setSearching = (condition) => {
   };
 };
 
+const setFlashMessage = (message) => {
+  return {
+    type: "SET_FLASH_MESSAGE",
+    payload: message,
+  };
+};
+
 module.exports = {
   setSearching,
   setSearchText,
   setFullPage,
+  setFlashMessage,
 };

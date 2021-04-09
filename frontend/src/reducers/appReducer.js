@@ -2,6 +2,7 @@ const initialState = {
   searchText: "",
   fullPage: false,
   searching: false,
+  flashMessage: "",
 };
 
 const appReducer = (state = initialState, action) => {
@@ -20,6 +21,11 @@ const appReducer = (state = initialState, action) => {
       return {
         ...state,
         searching: action.payload,
+      };
+    case "SET_FLASH_MESSAGE":
+      return {
+        ...state,
+        flashMessage: action.payload,
       };
     default:
       return state;

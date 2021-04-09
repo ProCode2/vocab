@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { setFlashMessage } from "../actions/appActions";
+import { useDispatch } from "react-redux";
 import "./Modal.css";
 
-function Modal() {
+const Modal = () => {
+  const dispatch = useDispatch();
   // manage open or close sate of the dialog box
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -17,6 +20,7 @@ function Modal() {
         console.log(word);
         setShow(false);
         setLoading(false);
+        dispatch(setFlashMessage("Queued Succesfully"));
         window.location.href = "/";
       })
       .catch((err) => console.log(err));
@@ -116,6 +120,6 @@ function Modal() {
       ) : null}
     </div>
   );
-}
+};
 
 export default Modal;

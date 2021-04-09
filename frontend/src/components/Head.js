@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchText, setSearching } from "../actions/appActions";
 
-function Head() {
+const Head = () => {
   // getting the app state
   const appState = useSelector((state) => state.app);
   const dispatch = useDispatch();
@@ -50,6 +50,6 @@ function Head() {
       </div>
     </form>
   );
-}
+};
 
 export default Head;

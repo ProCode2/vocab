@@ -23,27 +23,36 @@ const WordList = () => {
       <div className="w-full mx-auto">
         <hr />
         <div className="bg-white overflow-hidden sm:rounded-md">
-          <ul className="divide-y divide-gray-200 w-full" x-max="1">
-            {filterWords(words).map((word) => (
-              <li
-                key={word._id}
-                className="py-4 w-full hover:bg-pink-100 px-4 cursor-pointer"
-                onClick={() => {
-                  dispatch(setCurrentWord(word));
-                  dispatch(setFullPage(true));
-                }}
-              >
-                <h1 className="font-bold">{word.word}</h1>
-                <div>
-                  <span className="text-gray-600">
-                    [{word.pronunciations[0]}]
-                  </span>
-                  <span className="text-gray-600">[{word.info[0].pos}]</span>
-                </div>
-                <p>{word.origin}</p>
-              </li>
-            ))}
-          </ul>
+          {words.length > 0 ? (
+            <ul className="divide-y divide-gray-200 w-full" x-max="1">
+              {filterWords(words).map((word) => (
+                <li
+                  key={word._id}
+                  className="py-4 w-full hover:bg-pink-100 px-4 cursor-pointer"
+                  onClick={() => {
+                    dispatch(setCurrentWord(word));
+                    dispatch(setFullPage(true));
+                  }}
+                >
+                  <h1 className="font-bold text-xl">{word.word}</h1>
+                  <div>
+                    <span className="text-gray-600">
+                      [{word.pronunciations[0]}]
+                    </span>
+                    <span className="text-gray-600">[{word.info[0].pos}]</span>
+                  </div>
+                  <p>
+                    {word.info[0].definitions &&
+                      word.info[0].definitions[0].definition}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="font-bold text-3xl text-gray-500 text-center py-8">
+              <p>Add your first word!</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

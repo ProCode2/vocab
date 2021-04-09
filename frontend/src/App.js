@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setWords } from "./actions/wordActions";
 import { setFullPage } from "./actions/appActions";
 import Head from "./components/Head";
+import FlashMessage from "./components/FlashMessage";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -71,6 +72,7 @@ const App = () => {
       </div>
       {/* floating action button and dialog box */}
       <Modal />
+      <FlashMessage />
     </div>
   );
 };

@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
-const dbUri = `mongodb+srv://procode1:${process.env.DB_PASSWORD}@cluster0.xvget.mongodb.net/vocab?retryWrites=true&w=majority`;
+const dbUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.ple5l.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
 app.use(
   express.urlencoded({
@@ -57,33 +57,6 @@ mongoose
 // serve the react app
 app.use(express.static(path.resolve(__dirname, "../frontend/build")));
 
-// app.get("/getall", (req, res) => {
-//   Word.find({})
-//     .then((records) => {
-//       console.log(records);
-//       res.json(records);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(400).json(err);
-//     });
-// });
-
-// app.get("/search/:searchText", (req, res) => {
-//   const { searchText } = req.params;
-//   Word.find({
-//     word: { $regex: `.*${searchText.toLocaleLowerCase()}.*` },
-//   })
-//     .then((records) => {
-//       console.log(records);
-//       res.json(records);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(400).json(err);
-//     });
-// });
-
 app.get("/add/:word", (req, res) => {
   const { word } = req.params;
   axios({
@@ -95,7 +68,6 @@ app.get("/add/:word", (req, res) => {
     },
   })
     .then((d) => {
-      console.log(d.data.results[0].lexicalEntries[0].entries[0]);
       let wordName = d.data.results[0].word;
       let pronunciations = d.data.results[0].lexicalEntries[0].entries[0].pronunciations.map(
         (item) => item.phoneticSpelling
@@ -126,12 +98,10 @@ app.get("/add/:word", (req, res) => {
       });
 
       wordRecord.save().then((result) => {
-        console.log(result);
         res.json(result);
       });
     })
     .catch((err) => {
-      console.log(err);
       res.status(400).json(err);
     });
 });

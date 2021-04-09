@@ -4,12 +4,45 @@ const path = require("path");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const Word = require("./models/word");
+const graphqlHttp = require("express-graphql");
+const { buildSchema } = require("graphql");
+const { graphqlSchema } = require("./graphql/graphqlSchema");
 
 const PORT = process.env.PORT || 3001;
 
 const app = express();
 
 const dbUri = `mongodb+srv://procode1:${process.env.DB_PASSWORD}@cluster0.xvget.mongodb.net/vocab?retryWrites=true&w=majority`;
+
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(express.json());
+
+app.use(
+  "/graphql",
+  graphqlHttp.graphqlHTTP({
+    schema: buildSchema(graphqlSchema),
+    rootValue: {
+      words: () => {
+        return Word.find()
+          .then((records) => {
+            return records.map((record) => ({
+              _id: record.id,
+              word: record.word,
+              info: record.info,
+              pronunciations: record.pronunciations,
+              origin: record.origin,
+            }));
+          })
+          .catch((err) => console.log(err));
+      },
+    },
+    graphiql: true,
+  })
+);
 
 // connect to db
 mongoose
@@ -24,32 +57,32 @@ mongoose
 // serve the react app
 app.use(express.static(path.resolve(__dirname, "../frontend/build")));
 
-app.get("/getall", (req, res) => {
-  Word.find({})
-    .then((records) => {
-      console.log(records);
-      res.json(records);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json(err);
-    });
-});
+// app.get("/getall", (req, res) => {
+//   Word.find({})
+//     .then((records) => {
+//       console.log(records);
+//       res.json(records);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(400).json(err);
+//     });
+// });
 
-app.get("/search/:searchText", (req, res) => {
-  const { searchText } = req.params;
-  Word.find({
-    word: { $regex: `.*${searchText.toLocaleLowerCase()}.*` },
-  })
-    .then((records) => {
-      console.log(records);
-      res.json(records);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json(err);
-    });
-});
+// app.get("/search/:searchText", (req, res) => {
+//   const { searchText } = req.params;
+//   Word.find({
+//     word: { $regex: `.*${searchText.toLocaleLowerCase()}.*` },
+//   })
+//     .then((records) => {
+//       console.log(records);
+//       res.json(records);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(400).json(err);
+//     });
+// });
 
 app.get("/add/:word", (req, res) => {
   const { word } = req.params;
@@ -62,6 +95,7 @@ app.get("/add/:word", (req, res) => {
     },
   })
     .then((d) => {
+      console.log(d.data.results[0].lexicalEntries[0].entries[0]);
       let wordName = d.data.results[0].word;
       let pronunciations = d.data.results[0].lexicalEntries[0].entries[0].pronunciations.map(
         (item) => item.phoneticSpelling
@@ -70,17 +104,19 @@ app.get("/add/:word", (req, res) => {
       let wordInfo = d.data.results[0].lexicalEntries.map((entry) => {
         let pos = entry.lexicalCategory.text;
         let definitions = entry.entries[0].senses.map((item) => ({
-          definition: item.definitions[0],
-          examples: item.examples.map((t) => t.text),
+          definition: item.definitions ? item.definitions[0] : null,
+          examples: item.examples ? item.examples.map((t) => t.text) : null,
         }));
-        return {
-          pos: pos,
-          definitions: definitions,
-        };
+
+        let info = {};
+        if (pos) info.pos = pos;
+        if (definitions[0]) info.definitions = definitions;
+        return info;
       });
 
-      let origin =
-        d.data.results[0].lexicalEntries[0].entries[0].etymologies[0];
+      let origin = d.data.results[0].lexicalEntries[0].entries[0].etymologies
+        ? d.data.results[0].lexicalEntries[0].entries[0].etymologies[0]
+        : null;
 
       const wordRecord = new Word({
         word: wordName,

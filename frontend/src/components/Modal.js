@@ -1,16 +1,22 @@
 import React, { useState } from "react";
+import "./Modal.css";
 
 function Modal() {
+  // manage open or close sate of the dialog box
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  //  add the new word
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    setLoading(true);
     let newWord = event.currentTarget.querySelector("input").value;
     fetch(`/add/${newWord}`)
       .then((res) => res.json())
       .then((word) => {
         console.log(word);
         setShow(false);
+        setLoading(false);
         window.location.href = "/";
       })
       .catch((err) => console.log(err));
@@ -94,9 +100,10 @@ function Modal() {
                       Cancel
                     </button>
                     <button
-                      className="bg-crane text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      className="flex justify-between items-center bg-crane text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                       type="sybmit"
                     >
+                      {loading && <div className="loader mr-2"></div>}
                       Add
                     </button>
                   </div>

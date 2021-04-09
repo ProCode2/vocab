@@ -16,15 +16,42 @@ const App = () => {
   const fullPage = appState.fullPage;
 
   useEffect(() => {
-    fetch("/getall")
+    fetch("/graphql", {
+      method: "POST",
+      body: JSON.stringify({
+        query: `
+        query {
+          words {
+            _id
+            word
+            origin
+            pronunciations
+            info {
+              pos
+              definitions {
+                definition
+                examples
+              }
+            }
+          }
+        }
+        `,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((res) => res.json())
-      .then((d) => dispatch(setWords(d)))
+      .then((data) => {
+        dispatch(setWords(data.data.words));
+      })
       .catch((e) => console.log(e));
   }, [dispatch]);
 
   return (
     <div className="font-kumbh relative">
       <div className="bg-crane w-screen h-screen">
+        {/* logo and search input */}
         <Head />
       </div>
       <div className={fullPage ? "s t" : "s"}>
@@ -42,6 +69,7 @@ const App = () => {
         </div>
         {!fullPage ? <WordList /> : <WordDisplay />}
       </div>
+      {/* floating action button and dialog box */}
       <Modal />
     </div>
   );

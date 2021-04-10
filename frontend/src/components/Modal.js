@@ -107,7 +107,7 @@ const Modal = () => {
                           className="mt-2 text-sm text-gray-500"
                           id="word-description"
                         >
-                          Should be a valid word.
+                          Should be a valid word without spaces.
                         </p>
                       </div>
                     </div>

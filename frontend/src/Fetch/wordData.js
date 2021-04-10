@@ -46,6 +46,7 @@ const createWord = (newWord) => {
         createWord(name: "${newWord}"){
           _id
           word
+          alreadyExists
       }
       }
       `,

@@ -14,7 +14,7 @@ const getWordInfo = (word) => {
     },
   }).then((d) => {
     // get the word
-    let wordName = d.data.results[0].word;
+    let wordName = d.data.results[0].word.trim().toLocaleLowerCase();
     // get all the pronunciations
     let pronunciations = d.data.results[0].lexicalEntries[0].entries[0].pronunciations.map(
       (item) => item.phoneticSpelling

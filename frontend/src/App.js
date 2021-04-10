@@ -6,7 +6,7 @@ import Modal from "./components/Modal";
 import WordDisplay from "./components/WordDisplay";
 import { useDispatch, useSelector } from "react-redux";
 import { setWords } from "./actions/wordActions";
-import { setFullPage } from "./actions/appActions";
+import { setFullPage, setFlashMessage } from "./actions/appActions";
 import Head from "./components/Head";
 import FlashMessage from "./components/FlashMessage";
 import { getAllWord } from "./Fetch/wordData";
@@ -23,7 +23,7 @@ const App = () => {
       .then((data) => {
         dispatch(setWords(data.data.words));
       })
-      .catch((e) => console.log(e));
+      .catch((e) => dispatch(setFlashMessage("Server Error")));
   }, [dispatch]);
 
   return (

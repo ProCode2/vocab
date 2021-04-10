@@ -14,18 +14,27 @@ const Modal = () => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    let newWord = event.currentTarget.querySelector("input").value;
+    let newWord = event.currentTarget
+      .querySelector("input")
+      .value.trim()
+      .toLocaleLowerCase();
 
     // create a new word
     createWord(newWord)
       .then((data) => {
-        if (data.errors.length > 0) {
-          throw new Error(data.errors[0].message);
+        // check if any error was sent by server
+        if (!data.data.createWord) {
+          throw new Error("Something Went Wrong");
         }
         setShow(false);
         setLoading(false);
-        // window.location.href = "/";
-        dispatch(setFlashMessage("Queued Succesfully"));
+        window.location.href = "/";
+        // check if word already existed or not
+        if (data.data.createWord.alreadyExists) {
+          dispatch(setFlashMessage("Word already exists"));
+        } else {
+          dispatch(setFlashMessage("Queued Succesfully"));
+        }
       })
       .catch((err) => {
         setShow(false);

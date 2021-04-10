@@ -27,6 +27,7 @@ module.exports = {
     origin: String
     pronunciations: [String!]!
     info: [Info!]!
+    alreadyExists: Boolean
   }
 
   type RootQuery {

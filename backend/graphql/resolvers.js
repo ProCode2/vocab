@@ -26,6 +26,7 @@ module.exports = {
           info: record.info,
           pronunciations: record.pronunciations,
           origin: record.origin,
+          alreadyExists: true,
         }));
       } else {
         return getWordInfo(args.name).then((wordObj) => {

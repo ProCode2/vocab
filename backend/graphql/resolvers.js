@@ -17,16 +17,28 @@ module.exports = {
   },
 
   createWord: (args) => {
-    return getWordInfo(args.name).then((wordObj) => {
-      const newWord = new Word(wordObj);
+    return Word.exists({ word: args.name }).then((exists) => {
+      if (exists) {
+        return Word.findOne({ word: args.name }).then((record) => ({
+          _id: record.id,
+          word: record.word,
+          info: record.info,
+          pronunciations: record.pronunciations,
+          origin: record.origin,
+        }));
+      } else {
+        return getWordInfo(args.name).then((wordObj) => {
+          const newWord = new Word(wordObj);
 
-      return newWord.save().then((record) => ({
-        _id: record.id,
-        word: record.word,
-        info: record.info,
-        pronunciations: record.pronunciations,
-        origin: record.origin,
-      }));
+          return newWord.save().then((record) => ({
+            _id: record.id,
+            word: record.word,
+            info: record.info,
+            pronunciations: record.pronunciations,
+            origin: record.origin,
+          }));
+        });
+      }
     });
   },
 };

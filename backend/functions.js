@@ -3,7 +3,9 @@ const { default: axios } = require("axios");
 const getWordInfo = (word) => {
   return axios({
     method: "GET",
-    url: `https://od-api.oxforddictionaries.com/api/v2/entries/en-us/${word.toLocaleLowerCase()}`,
+    url: `https://od-api.oxforddictionaries.com/api/v2/entries/en-us/${word
+      .trim()
+      .toLocaleLowerCase()}`,
     headers: {
       app_id: process.env.API_ID,
       app_key: process.env.API_KEY,

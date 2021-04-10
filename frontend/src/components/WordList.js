@@ -49,7 +49,8 @@ const WordList = () => {
               ))}
             </ul>
           ) : (
-            <div className="font-bold text-3xl text-gray-500 text-center py-8">
+            <div className="font-bold text-2xl text-gray-500 text-center mt-24">
+              <i className="fas fa-file-word text-6xl mb-3"></i>
               <p>Add your first word!</p>
             </div>
           )}

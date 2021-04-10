@@ -25,7 +25,6 @@ app.use(
   graphqlHttp.graphqlHTTP({
     schema: buildSchema(graphqlSchema),
     rootValue: resolvers,
-    graphiql: true,
   })
 );
 

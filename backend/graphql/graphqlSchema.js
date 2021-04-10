@@ -33,7 +33,7 @@ module.exports = {
   }
 
   type RootMutation {
-    createWord(name: String, origin: String, pronunciations: [String], info: [InfoInput] ): Word
+    createWord(name: String!): Word
   }
 
   schema {

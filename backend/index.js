@@ -1,4 +1,3 @@
-const { default: axios } = require("axios");
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
@@ -7,6 +6,7 @@ const Word = require("./models/word");
 const graphqlHttp = require("express-graphql");
 const { buildSchema } = require("graphql");
 const { graphqlSchema } = require("./graphql/graphqlSchema");
+const { getWordInfo } = require("./functions");
 
 const PORT = process.env.PORT || 3001;
 
@@ -39,6 +39,20 @@ app.use(
           })
           .catch((err) => console.log(err));
       },
+
+      createWord: (args) => {
+        return getWordInfo(args.name).then((wordObj) => {
+          const newWord = new Word(wordObj);
+
+          return newWord.save().then((record) => ({
+            _id: record.id,
+            word: record.word,
+            info: record.info,
+            pronunciations: record.pronunciations,
+            origin: record.origin,
+          }));
+        });
+      },
     },
     graphiql: true,
   })
@@ -59,51 +73,15 @@ app.use(express.static(path.resolve(__dirname, "../frontend/build")));
 
 app.get("/add/:word", (req, res) => {
   const { word } = req.params;
-  axios({
-    method: "GET",
-    url: `https://od-api.oxforddictionaries.com/api/v2/entries/en-us/${word.toLocaleLowerCase()}`,
-    headers: {
-      app_id: process.env.API_ID,
-      app_key: process.env.API_KEY,
-    },
-  })
-    .then((d) => {
-      let wordName = d.data.results[0].word;
-      let pronunciations = d.data.results[0].lexicalEntries[0].entries[0].pronunciations.map(
-        (item) => item.phoneticSpelling
-      );
 
-      let wordInfo = d.data.results[0].lexicalEntries.map((entry) => {
-        let pos = entry.lexicalCategory.text;
-        let definitions = entry.entries[0].senses.map((item) => ({
-          definition: item.definitions ? item.definitions[0] : null,
-          examples: item.examples ? item.examples.map((t) => t.text) : null,
-        }));
+  getWordInfo(word).then((wordObj) => {
+    const newWord = new Word(wordObj);
 
-        let info = {};
-        if (pos) info.pos = pos;
-        if (definitions[0]) info.definitions = definitions;
-        return info;
-      });
-
-      let origin = d.data.results[0].lexicalEntries[0].entries[0].etymologies
-        ? d.data.results[0].lexicalEntries[0].entries[0].etymologies[0]
-        : null;
-
-      const wordRecord = new Word({
-        word: wordName,
-        pronunciations: pronunciations,
-        origin: origin,
-        info: wordInfo,
-      });
-
-      wordRecord.save().then((result) => {
-        res.json(result);
-      });
-    })
-    .catch((err) => {
-      res.status(400).json(err);
-    });
+    newWord
+      .save()
+      .then((w) => res.json(w))
+      .catch((_) => res.status(400).json("something went wrong"));
+  });
 });
 
 // redirect unhandled routes to react app

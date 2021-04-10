@@ -14,14 +14,29 @@ const Modal = () => {
     event.preventDefault();
     setLoading(true);
     let newWord = event.currentTarget.querySelector("input").value;
-    fetch(`/add/${newWord}`)
+
+    fetch("/graphql", {
+      method: "POST",
+      body: JSON.stringify({
+        query: `
+        mutation {
+          createWord(name: "${newWord}"){
+            _id
+            word
+        }
+        }
+        `,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((res) => res.json())
-      .then((word) => {
-        console.log(word);
+      .then((data) => {
+        console.log(data.data.createWord._id);
         setShow(false);
         setLoading(false);
         dispatch(setFlashMessage("Queued Succesfully"));
-        window.location.href = "/";
       })
       .catch((err) => console.log(err));
   };

@@ -15,7 +15,7 @@ const Head = () => {
   };
 
   return (
-    <form action="#">
+    <form action="#" onSubmit={(e) => e.preventDefault()}>
       <div className="p-4 text-white">
         {!searching ? (
           //  Logo

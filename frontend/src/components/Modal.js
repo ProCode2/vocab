@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { setFlashMessage } from "../actions/appActions";
 import { useDispatch } from "react-redux";
 import "./Modal.css";
+import { createWord } from "../Fetch/wordData";
 
 const Modal = () => {
   const dispatch = useDispatch();
@@ -15,30 +16,20 @@ const Modal = () => {
     setLoading(true);
     let newWord = event.currentTarget.querySelector("input").value;
 
-    fetch("/graphql", {
-      method: "POST",
-      body: JSON.stringify({
-        query: `
-        mutation {
-          createWord(name: "${newWord}"){
-            _id
-            word
-        }
-        }
-        `,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
+    createWord(newWord)
       .then((data) => {
         console.log(data.data.createWord._id);
         setShow(false);
         setLoading(false);
+        window.location.href = "/";
         dispatch(setFlashMessage("Queued Succesfully"));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setShow(false);
+        setLoading(false);
+        dispatch(setFlashMessage("Something went wrong"));
+      });
   };
 
   return (

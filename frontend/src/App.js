@@ -9,6 +9,7 @@ import { setWords } from "./actions/wordActions";
 import { setFullPage } from "./actions/appActions";
 import Head from "./components/Head";
 import FlashMessage from "./components/FlashMessage";
+import { getAllWord } from "./Fetch/wordData";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -17,32 +18,7 @@ const App = () => {
   const fullPage = appState.fullPage;
 
   useEffect(() => {
-    fetch("/graphql", {
-      method: "POST",
-      body: JSON.stringify({
-        query: `
-        query {
-          words {
-            _id
-            word
-            origin
-            pronunciations
-            info {
-              pos
-              definitions {
-                definition
-                examples
-              }
-            }
-          }
-        }
-        `,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
+    getAllWord()
       .then((data) => {
         dispatch(setWords(data.data.words));
       })

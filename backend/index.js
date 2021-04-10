@@ -2,11 +2,10 @@ const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const Word = require("./models/word");
 const graphqlHttp = require("express-graphql");
 const { buildSchema } = require("graphql");
 const { graphqlSchema } = require("./graphql/graphqlSchema");
-const { getWordInfo } = require("./functions");
+const resolvers = require("./graphql/resolvers");
 
 const PORT = process.env.PORT || 3001;
 
@@ -25,35 +24,7 @@ app.use(
   "/graphql",
   graphqlHttp.graphqlHTTP({
     schema: buildSchema(graphqlSchema),
-    rootValue: {
-      words: () => {
-        return Word.find()
-          .then((records) => {
-            return records.map((record) => ({
-              _id: record.id,
-              word: record.word,
-              info: record.info,
-              pronunciations: record.pronunciations,
-              origin: record.origin,
-            }));
-          })
-          .catch((err) => console.log(err));
-      },
-
-      createWord: (args) => {
-        return getWordInfo(args.name).then((wordObj) => {
-          const newWord = new Word(wordObj);
-
-          return newWord.save().then((record) => ({
-            _id: record.id,
-            word: record.word,
-            info: record.info,
-            pronunciations: record.pronunciations,
-            origin: record.origin,
-          }));
-        });
-      },
-    },
+    rootValue: resolvers,
     graphiql: true,
   })
 );
@@ -70,19 +41,6 @@ mongoose
 
 // serve the react app
 app.use(express.static(path.resolve(__dirname, "../frontend/build")));
-
-app.get("/add/:word", (req, res) => {
-  const { word } = req.params;
-
-  getWordInfo(word).then((wordObj) => {
-    const newWord = new Word(wordObj);
-
-    newWord
-      .save()
-      .then((w) => res.json(w))
-      .catch((_) => res.status(400).json("something went wrong"));
-  });
-});
 
 // redirect unhandled routes to react app
 app.get("*", (req, res) => {

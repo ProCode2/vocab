@@ -19,9 +19,12 @@ const Modal = () => {
     // create a new word
     createWord(newWord)
       .then((data) => {
+        if (data.errors.length > 0) {
+          throw new Error(data.errors[0].message);
+        }
         setShow(false);
         setLoading(false);
-        window.location.href = "/";
+        // window.location.href = "/";
         dispatch(setFlashMessage("Queued Succesfully"));
       })
       .catch((err) => {

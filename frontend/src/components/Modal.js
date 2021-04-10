@@ -84,6 +84,7 @@ const Modal = () => {
                         </label>
                         <div className="mt-1">
                           <input
+                            required
                             autoComplete="off"
                             autoFocus
                             type="text"

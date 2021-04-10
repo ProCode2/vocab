@@ -17,7 +17,9 @@ const WordList = () => {
     if (searchText === "") {
       return ws;
     }
-    return ws.filter((w) => w.word.includes(searchText));
+    return ws.filter((w) =>
+      w.word.includes(searchText.trim().toLocaleLowerCase())
+    );
   };
 
   return (

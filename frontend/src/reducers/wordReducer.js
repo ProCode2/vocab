@@ -1,5 +1,7 @@
 const initialState = {
+  // for storing all the words
   words: [],
+  // for storing the current word that will be shown in the full screen
   currentWord: {},
 };
 

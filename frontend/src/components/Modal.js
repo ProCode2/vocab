@@ -16,16 +16,15 @@ const Modal = () => {
     setLoading(true);
     let newWord = event.currentTarget.querySelector("input").value;
 
+    // create a new word
     createWord(newWord)
       .then((data) => {
-        console.log(data.data.createWord._id);
         setShow(false);
         setLoading(false);
         window.location.href = "/";
         dispatch(setFlashMessage("Queued Succesfully"));
       })
       .catch((err) => {
-        console.log(err);
         setShow(false);
         setLoading(false);
         dispatch(setFlashMessage("Something went wrong"));

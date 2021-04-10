@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 function WordDisplay() {
   const wordState = useSelector((state) => state.word);
 
+  // get the current word
   const word = wordState.currentWord;
 
   const renderWordInfo = (word) => {

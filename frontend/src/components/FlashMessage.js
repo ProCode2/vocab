@@ -8,6 +8,7 @@ const FlashMessage = () => {
   const flashMessage = appState.flashMessage;
 
   useEffect(() => {
+    // remove the component after 3 seconds
     let timeoutID = setTimeout(() => {
       dispatch(setFlashMessage(""));
       clearTimeout(timeoutID);

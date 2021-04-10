@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentWord } from "../actions/wordActions";
 import { setFullPage } from "../actions/appActions";
 
+// show the list of words
 const WordList = () => {
   const dispatch = useDispatch();
   const wordState = useSelector((state) => state.word);
@@ -11,6 +12,7 @@ const WordList = () => {
   const words = wordState.words;
   const searchText = appState.searchText;
 
+  // filter the words being displayed according to the search text
   const filterWords = (ws) => {
     if (searchText === "") {
       return ws;
@@ -49,6 +51,7 @@ const WordList = () => {
               ))}
             </ul>
           ) : (
+            // show this of no word is present
             <div className="font-bold text-2xl text-gray-500 text-center mt-24">
               <i className="fas fa-file-word text-6xl mb-3"></i>
               <p>Add your first word!</p>

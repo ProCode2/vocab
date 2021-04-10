@@ -1,7 +1,11 @@
 const initialState = {
+  // stores the current search text being searched by the user
   searchText: "",
+  // dictates whether the full screen should appear or not
   fullPage: false,
+  // dictates whether the search box should appear or not
   searching: false,
+  // for storing success/error messages
   flashMessage: "",
 };
 

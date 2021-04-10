@@ -1,3 +1,4 @@
+// schema to build graphql queries
 module.exports = {
   graphqlSchema: `
   type Definitions {

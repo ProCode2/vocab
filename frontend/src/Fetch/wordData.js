@@ -1,3 +1,4 @@
+// get all the words
 const getAllWord = () => {
   return fetch("/graphql", {
     method: "POST",
@@ -35,6 +36,7 @@ const getAllWord = () => {
     .then((res) => res.json());
 };
 
+// store a word
 const createWord = (newWord) => {
   return fetch("/graphql", {
     method: "POST",

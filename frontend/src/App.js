@@ -18,6 +18,7 @@ const App = () => {
   const fullPage = appState.fullPage;
 
   useEffect(() => {
+    // get all the words and store in redux store
     getAllWord()
       .then((data) => {
         dispatch(setWords(data.data.words));

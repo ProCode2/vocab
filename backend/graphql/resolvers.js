@@ -1,6 +1,7 @@
 const Word = require("../models/word");
 const { getWordInfo } = require("../functions");
 
+// resolvers to expose data to the client
 module.exports = {
   words: () => {
     return Word.find()

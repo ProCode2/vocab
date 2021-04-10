@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
+// uri for connecting to mongodb
 const dbUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.ple5l.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
 app.use(
@@ -20,6 +21,7 @@ app.use(
 );
 app.use(express.json());
 
+// add graphql middleware
 app.use(
   "/graphql",
   graphqlHttp.graphqlHTTP({
